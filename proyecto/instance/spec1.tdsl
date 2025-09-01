@@ -1,0 +1,4 @@
+task myTask {
+  input file "input.txt"
+  output file "output.txt"
+}
