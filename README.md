@@ -1,6 +1,7 @@
 # Proyecto_1_PLE
 ## Nombres Equipo
 Zair Montoya Bello - 202321067 - z.montoya@uniandes.edu.co
+
 N Felipe Celis D -202320636 - nf.celis@uniandes.edu.co
 
 ## Rascal
