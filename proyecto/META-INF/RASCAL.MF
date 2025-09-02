@@ -1,4 +1,5 @@
 Manifest-Version: 0.0.1
 Project-Name: proyecto
 Source: src/main/rascal
-Require-Libraries: |lib://dsl-project|,|lib://typepal|
+Bin: target/classes
+Main: Plugin
