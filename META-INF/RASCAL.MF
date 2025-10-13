@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Project-Name: proyecto
+Bundle-Name: proyecto
+Bundle-SymbolicName: proyecto
+Bundle-Version: 0.1.0
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Source: src/main/rascal
+Resources: instance
+Main-Module: Main
