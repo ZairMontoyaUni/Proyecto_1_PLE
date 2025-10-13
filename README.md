@@ -4,6 +4,8 @@ Zair Montoya Bello - 202321067 - z.montoya@uniandes.edu.co
 
 N Felipe Celis D -202320636 - nf.celis@uniandes.edu.co
 
+Ma. Alejandra Carrillo - 202321854 - ma.carrillo2@uniandes.edu.co
+
 ## Rascal
 
 1. primero descargar la extension de rascal Rascal Metaprogramming Language -- UseTheSource
