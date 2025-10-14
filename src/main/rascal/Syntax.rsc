@@ -2,23 +2,30 @@ module Syntax
 
 // ---------- Layout ----------
 lexical WS = [\ \t\r];
-layout Layout = WS* !>> [\n];
+layout Layout = WS* !>> [\ \t\r];
 lexical NL = "\n";
 
-
 // ---------- Átomos ----------
-lexical Identifier = [a-z][a-z0-9\-]*;
+lexical Identifier = ([a-z][a-z0-9\-]*) \ KW;
 keyword KW = "function" | "do" | "end" | "if" | "then" | "elseif" | "else"
            | "for" | "from" | "to" | "cond" | "in" | "with" | "data" | "yielding"
            | "true" | "false";
 
 lexical INT    = [0-9]+;
 lexical REAL   = [0-9]+ "." [0-9]+;
-lexical CHAR = "\"" [a-z] "\"";
-lexical STRING = "\"" [CHAR]* "\"";
+lexical CHAR   = "\"" [a-z] "\"";
+lexical STRING = "\"" ![\"]* "\"";
+
+// ---------- Tokens ----------
+lexical COMMA  = ",";
+lexical ASSIGN = "=";
+lexical ARROW  = "-\>";
+lexical LPAREN = "(";
+lexical RPAREN = ")";
+lexical DOLLAR = "$";
 
 // ---------- Raíz ----------
-start syntax Program = program: Module+;
+start syntax Program = program: Module+ modules;
 
 // ---------- Módulos ----------
 syntax Module
@@ -27,27 +34,24 @@ syntax Module
   ;
 
 syntax DataModule
-  = dataDecl: "data" Identifier "with" NL* DataBody "end"
+  = dataDecl: "data" Identifier name "with" NL* DataBody body "end"
   ;
 
 syntax DataBody
-  = /* completar en incremento 2 (struct/tuple/sequence/iterators) */
+  = empty: ()
   ;
 
 // ---------- Funciones ----------
 syntax FunctionModule
   = function: "function"
-              fName: Identifier
-              "(" params: {Identifier ","}* ")"
-              "do" NL* body: Expressions "end"
+              Identifier fName
+              LPAREN {Identifier COMMA}* params RPAREN
+              "do" NL* Expressions body "end"
   ;
-
-
-syntax Params = params: Identifier (COMMA Identifier)* ;
 
 // ---------- Bloques/Expresiones ----------
 syntax Expressions
-  = expressions: Expression (NL+ Expression)* NL*
+  = expressions: {Expression NL+}+ exprs NL*
   ;
 
 syntax Expression
@@ -56,42 +60,46 @@ syntax Expression
   | cone     : CondExpr
   | forRange : ForExpr
   | call     : Call
-  | lit      : Value
+  > lit      : Value
   | var      : Identifier
   ;
 
 syntax Assignment
-  = ids:Identifier (COMMA Identifier)* ASSIGN e:Expression
+  = assign: {Identifier COMMA}+ ids ASSIGN Expression e
   ;
 
 syntax IfExpr
-  = "if" cond:Expression "then" NL* tBody:Expressions
-    ( "elseif" eCond:Expression "then" NL* eBody:Expressions )*
-    "else" NL* fBody:Expressions
+  = ifExpr: "if" Expression cond "then" NL* Expressions tBody
+    ElseIfBranch* elseifs
+    "else" NL* Expressions fBody
     "end"
   ;
 
+syntax ElseIfBranch
+  = elseif: "elseif" Expression eCond "then" NL* Expressions eBody
+  ;
+
 syntax CondExpr
-  = "cond" tag:Identifier "do" NL*
-    branches:(CondBranch NL+)+
+  = condExpr: "cond" Identifier tag "do" NL*
+    CondBranch+ branches
     "end"
   ;
 
 syntax CondBranch
-  = guard:Expression ARROW NL* body:Expressions
+  = branch: Expression guard ARROW NL* Expressions body NL+
   ;
 
 syntax ForExpr
-  = "for" v:Identifier "from" lo:Expression "to" hi:Expression
-    "do" NL* body:Expressions "end"
+  = forExpr: "for" Identifier v "from" Expression lo "to" Expression hi
+    "do" NL* Expressions body "end"
   ;
 
 syntax Call
-  = call1: fname:Identifier LPAREN Args? RPAREN
-  | call2: owner:Identifier DOLLAR fname:Identifier LPAREN Args? RPAREN
+  = call1: Identifier fname LPAREN Args? args RPAREN
+  | call2: Identifier owner DOLLAR Identifier fname LPAREN Args? args RPAREN
   ;
 
-syntax Args = args: Expression (COMMA Expression)* ;
+syntax Args = args: {Expression COMMA}+ exprs;
 
 // ---------- Literales ----------
 syntax Value
