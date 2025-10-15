@@ -26,7 +26,7 @@ Fns indexFns(Program p) {
   return m;
 }
 
-Val runFunction(FunctionModule f, Fns fns, list[Val] args) {
+Val runFunction(FunctionModule f, Fns fns, list[Val] _args) {
   Env env = ();
   Val last = U();
   for (e <- f.body) {
@@ -80,12 +80,12 @@ Val eval(Expr e, Env env, Fns fns) {
       }
       return evalBlock(f, env, fns);
     }
-    case forRange(v, lo, hi, b): {
+    case forRange(varName, lo, hi, b): {
       int a = asInt(eval(lo, env, fns));
       int z = asInt(eval(hi, env, fns));
       Val last = U();
       for (i <- [a..z]) {
-        env[v] = I(i);
+        env[varName] = I(i);
         last = evalBlock(b, env, fns);
       }
       return last;

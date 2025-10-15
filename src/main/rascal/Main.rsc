@@ -1,14 +1,13 @@
 module Main
 
 import IO;
-import Util::Tasks;
 import AST;
 import Implode;
 import Checker;
 import Generator1;
 
 public void main(list[str] args=[]) {
-  if (size(args) == 0) {
+  if (args == []) {
     println("Uso: main(\"path/to/file.alu\")");
     return;
   }

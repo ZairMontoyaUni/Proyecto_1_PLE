@@ -16,7 +16,7 @@ data Expr
   = assign(list[str] ids, Expr e)
   | ife(Expr cond, list[Expr] thenBody, list[ElseIf] elseifs, list[Expr] elseBody)
   | cone(str tags, list[CondBranch] branches)
-  | forRange(str v, Expr lo, Expr hi, list[Expr] body)
+  | forRange(str varName, Expr lo, Expr hi, list[Expr] body)
   | call1(str fname, list[Expr] args)
   | call2(str owner, str fname, list[Expr] args)
   | lit(Value v)
