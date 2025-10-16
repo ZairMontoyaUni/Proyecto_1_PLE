@@ -3,7 +3,7 @@ module Generator1
 import AST;
 import IO;
 
-data Val = I(int v) | R(real v) | B(bool v) | C(str v) | S(str v) | U(); // U = undefined/null
+data Val = I(int i) | R(real r) | B(bool b) | C(str c) | S(str s) | U(); // U = undefined/null
 
 alias Env = map[str, Val];
 alias Fns = map[str, FunctionModule];
@@ -37,10 +37,10 @@ Val runFunction(FunctionModule f, Fns fns, list[Val] _args) {
 
 Val eval(Expr e, Env env, Fns fns) {
   switch (e) {
-    case lit(intLit(v)): 
-      return I(v);
-    case lit(realLit(v)): 
-      return R(v);
+    case lit(intLit(i)): 
+      return I(i);
+    case lit(realLit(r)): 
+      return R(r);
     case lit(boolTrue()): 
       return B(true);
     case lit(boolFalse()): 

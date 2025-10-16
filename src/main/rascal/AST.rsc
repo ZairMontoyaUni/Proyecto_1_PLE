@@ -2,10 +2,9 @@ module AST
 
 data ElseIf     = elseif(Expr cond, list[Expr] body);
 data CondBranch = condBranch(Expr guard, list[Expr] body);
-
 data Value
-  = intLit(int v)
-  | realLit(real v)
+  = intLit(int i)
+  | realLit(real r)
   | boolTrue()
   | boolFalse()
   | charLit(str c)
