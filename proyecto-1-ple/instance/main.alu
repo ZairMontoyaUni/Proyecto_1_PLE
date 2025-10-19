@@ -1,12 +1,13 @@
 function main()
 do
 x = 0
+i = 1
 for i from 1 to 3 do
   x = x + i
 end
 if x > 3 then
   x = x * 2
-elseif x = 3 then
+elseif x == 3 then
   x = 99
 else
   x = 1
