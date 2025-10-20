@@ -24,14 +24,14 @@ lexical PLUS    = "+";
 lexical POW     = "**";
 lexical MOD     = "%";
 
-lexical LT      = "<";
-lexical GT      = ">";
-lexical LE      = "<=";
-lexical GE      = ">=";
-lexical NE      = "<>";
+lexical LT      = '\<';
+lexical GT      = '\>';
+lexical LE      = '\<=';
+lexical GE      = '\>=';
+lexical NE      = '\<\>';
 lexical EQ      = "==";  
 
-lexical ARROW   = "->";
+lexical ARROW   = '-\>';
 lexical COLON   = ":";
 lexical DOLLAR  = "$";
 lexical LP      = "(";
@@ -41,7 +41,7 @@ lexical RB      = "]";
 lexical COMMA   = ",";
 
 // ---------- Raíz ----------
-start syntax Program = Modules : sep(Module, NL+);
+start syntax Program = Module+;
 
 // ---------- Módulos ----------
 syntax Module = FunctionModule | DataModule ;
@@ -64,13 +64,11 @@ syntax Expression
   = ControlExpression
   | Assignment
   | Value
-  | FunctionCall
-  | DataCreation
-  ;
+  | FunctionCall;
 
 syntax ControlExpression = IfExpression | CondExpression |ForExpression ;
 syntax IfExpression
-  = "if" Condition "then" NL* Expressions ( "elsif" Condition "then" NL* Expressions )* [ "else" NL* Expressions ] "end";
+  = "if" Condition "then" NL* Expressions ( "elsif" Condition "then" NL* Expressions )* "else" NL* Expressions "end";
 syntax CondExpression 
   = "cond" Identifier "do" NL*(Condition ARROW Expressions)+ NL* "end" ;
 syntax ForExpression
