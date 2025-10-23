@@ -1,10 +1,14 @@
 module Plugin
 
-import util::LanguageServer;
+import IO;
 import ParseTree;
+import util::Reflective;
+import util::IDEServices;
+import util::LanguageServer;
+import Relation;
 import Syntax;
 
-PathConfig pcfg = getProjectPathConfig(|project://proyecto|);
+PathConfig pcfg = getProjectPathConfig(|project://proyecto-1-ple|);
 
 Language aluLang = language(pcfg, "ALU", "alu", "Plugin", "contribs");
 

@@ -17,8 +17,37 @@
     <!-- Ajusta la versión de Rascal aquí si la necesitas -->
     <!-- <rascal.version>0.22.0</rascal.version> -->
   </properties>
+  <repositories>
+    <repository>
+      <id>oss-sonatype-releases</id>
+      <name>OSS Sonatype Releases</name>
+      <url>https://oss.sonatype.org/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>oss-sonatype-snapshots</id>
+      <name>OSS Sonatype Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>usethesource-releases</id>
+      <name>usethesource releases</name>
+      <url>https://releases.usethesource.io/maven/</url>
+    </repository>
+  </repositories>
 
   <dependencies>
-    <!-- Añadir dependencias Rascal aquí si se requieren -->
+    
+    <dependency>
+    <groupId>org.rascalmpl</groupId>
+    <artifactId>rascal-lsp</artifactId>
+    <version>2.21.0-2</version> <!-- ajusta la versión a la que uses -->
+    </dependency>
+    
   </dependencies>
 </project>

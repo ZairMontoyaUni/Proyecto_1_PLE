@@ -53,7 +53,7 @@ syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList "end" 
 syntax FunctionModule
   = "function"
               Identifier
-              LP Parameters RP
+              LP Parameters* RP NL
               "do" NL* Expressions NL* "end"
   ;
 
