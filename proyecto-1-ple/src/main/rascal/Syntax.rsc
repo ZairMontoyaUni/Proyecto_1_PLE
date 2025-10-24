@@ -34,8 +34,8 @@ lexical EQ      = "==";
 lexical ARROW   = '-\>';
 lexical COLON   = ":";
 lexical DOLLAR  = "$";
-lexical LP      = "(";
-lexical RP      = ")";
+lexical LP = "(";
+lexical RP = ")";
 lexical LB      = "[";
 lexical RB      = "]";
 lexical COMMA   = ",";
@@ -53,12 +53,12 @@ syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList "end" 
 syntax FunctionModule
   = "function"
               Identifier
-              LP Parameters* RP NL
+              LP [Parameters]? RP NL
               "do" NL* Expressions NL* "end"
   ;
 
 // ---------- Bloques/Expresiones ----------
-syntax Parameters = [Identifier (COMMA Identifier)*] ;
+syntax Parameters = Identifier (COMMA Identifier)* ;
 syntax Expressions = Expression (NL Expression)* ;
 syntax Expression
   = ControlExpression
@@ -95,7 +95,7 @@ syntax Value
   ;
 
 syntax FunctionCall = Identifier DOLLAR LP Arguments RP ;
-syntax Arguments = [Expression (COMMA Expression)*] ;
+syntax Arguments = Expression (COMMA Expression)* ;
 
 syntax Condition = Expression Operator Expression ;
 syntax Operator = LT | GT | LE | GE | NE | EQ | "and" | "or";
