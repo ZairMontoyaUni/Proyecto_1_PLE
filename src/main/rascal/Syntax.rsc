@@ -2,7 +2,7 @@ module Syntax
 
 // ---------- Layout ----------
 layout LAYOUT = [\ \t]*;
-lexical NL = [\n]+;
+lexical NL = [\r]?[\n]+;
 
 // ---------- identificadores y literales ----------
 lexical Identifier = [a-z] [a-zA-Z0-9\-]* ;
@@ -41,30 +41,36 @@ lexical RB      = "]";
 lexical COMMA   = ",";
 
 // ---------- Raíz ----------
-start syntax Program = Module+;
+start syntax Program = program:Module+;
 
 // ---------- Módulos ----------
-syntax Module = FunctionModule | DataModule ;
+syntax Module
+  = funMod: FunctionModule
+  | dataMod: DataModule;
 
 syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList "end" ;
 
 
 // ---------- Funciones ----------
 syntax FunctionModule
-  = "function"
-              Identifier
-              LP [Parameters]? RP NL
-              "do" NL* Expressions NL* "end"
-  ;
+  = function: "function" Identifier LP [Parameters]? RP
+    NL* "do" NL* Expressions NL* "end" NL*;
+
+  
 
 // ---------- Bloques/Expresiones ----------
 syntax Parameters = Identifier (COMMA Identifier)* ;
 syntax Expressions = Expression (NL Expression)* ;
 syntax Expression
-  = ControlExpression
-  | Assignment
-  | Value
-  | FunctionCall;
+  = left Expression PLUS right Expression
+  > left Expression MINUS right Expression
+  > left Expression STAR right Expression
+  > left Expression SLASH right Expression
+  > ControlExpression
+  > Assignment
+  > Value
+  > FunctionCall;
+  
 
 syntax ControlExpression = IfExpression | CondExpression |ForExpression ;
 syntax IfExpression

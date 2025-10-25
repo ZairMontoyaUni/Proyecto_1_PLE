@@ -96,7 +96,31 @@ Val eval(Expr e, Env env, Fns fns) {
           return evalBlock(b, env, fns);
       }
       return U();
+      
     }
+
+        case add(l, r): {
+      int left  = asInt(eval(l, env, fns));
+      int right = asInt(eval(r, env, fns));
+      return I(left + right);
+    }
+    case sub(l, r): {
+      int left  = asInt(eval(l, env, fns));
+      int right = asInt(eval(r, env, fns));
+      return I(left - right);
+    }
+    case mul(l, r): {
+      int left  = asInt(eval(l, env, fns));
+      int right = asInt(eval(r, env, fns));
+      return I(left * right);
+    }
+    case div(l, r): {
+      int left  = asInt(eval(l, env, fns));
+      int right = asInt(eval(r, env, fns));
+      if (right == 0) return I(0);
+      return I(left / right);
+    }
+
     default: 
       return U();
   }

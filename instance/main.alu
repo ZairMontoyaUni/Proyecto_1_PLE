@@ -3,7 +3,7 @@ do
 x = 0
 i = 1
 for i from 1 to 3 do
-  x = x + i
+  x = x + 1
 end
 if x > 3 then
   x = x * 2

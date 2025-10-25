@@ -18,10 +18,14 @@ data Expr
   | forRange(str varName, Expr lo, Expr hi, list[Expr] body)
   | call1(str fname, list[Expr] args)
   | call2(str owner, str fname, list[Expr] args)
+  | add(Expr l, Expr r)    // <- NUEVOS
+  | sub(Expr l, Expr r)    // <- NUEVOS
+  | mul(Expr l, Expr r)    // <- NUEVOS
+  | div(Expr l, Expr r)    // <- NUEVOS
   | lit(Value v)
   | var(str id)
   ;
-
+  
 data FunctionModule = function(str fName, list[str] params, list[Expr] body);
 
 data DataBody   = dataBody();
