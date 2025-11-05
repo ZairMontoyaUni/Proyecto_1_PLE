@@ -48,6 +48,11 @@
     <artifactId>rascal-lsp</artifactId>
     <version>2.21.0-2</version> <!-- ajusta la versión a la que uses -->
     </dependency>
+    <dependency>
+    <groupId>org.rascalmpl</groupId>
+    <artifactId>typepal</artifactId>
+    <version>0.14.8</version>
+  </dependency>
     
   </dependencies>
 </project>
