@@ -6,7 +6,7 @@ lexical NL = [\r]?[\n]+;
 
 // ---------- identificadores y literales ----------
 lexical Identifier = [a-z] [a-zA-Z0-9\-]* ;
-keyword KW = "cond" | "do" | "data" | "elsif" | "end" | "for" | "from" | "then" | "function" | "else" | "if" | "in" | "iterator" | "sequence" | "struct" | "to" | "tuple" | "type" | "with" | "yielding" ;
+keyword KW = "cond" | "do" | "data" | "elseif" | "end" | "for" | "from" | "then" | "function" | "else" | "if" | "in" | "iterator" | "sequence" | "struct" | "to" | "tuple" | "type" | "with" | "yielding" ;
 lexical Number  = [0-9]+ ("." [0-9]+)?;
 syntax Boolean
   = "true"
@@ -61,25 +61,32 @@ syntax FunctionModule
 // ---------- Bloques/Expresiones ----------
 syntax Parameters = Identifier (COMMA Identifier)* ;
 syntax Expressions = Expression (NL Expression)* ;
+syntax Primary
+  = Identifier             // variable
+  | FunctionCall           // f$(...)
+  | Value                  // literales
+  | LP Expression RP       // ( ... )
+  ;
+
 syntax Expression
-  = left Expression PLUS right Expression
+  = left Expression PLUS  right Expression
   > left Expression MINUS right Expression
-  > left Expression STAR right Expression
+  > left Expression STAR  right Expression
   > left Expression SLASH right Expression
-  > ControlExpression
   > Assignment
-  > Value
-  > FunctionCall;
+  > ControlExpression
+  > Primary
+  ;
   
 
 syntax ControlExpression = IfExpression | CondExpression |ForExpression ;
 syntax IfExpression
-  = "if" Condition "then" NL* Expressions ( "elsif" Condition "then" NL* Expressions )* "else" NL* Expressions "end";
+  = "if" Condition "then" NL* Expressions ( "elseif" Condition "then" NL* Expressions )* "else" NL* Expressions "end";
 syntax CondExpression 
   = "cond" Identifier "do" NL*(Condition ARROW Expressions)+ NL* "end" ;
 syntax ForExpression
   = "for" Identifier "from" Range "do" NL* Expressions "end" ;
-syntax Range = Value "to" Value ;
+syntax Range = Expression "to" Expression ;
 
 syntax Assignment = VariableList "=" Expression ;
 syntax VariableList = Identifier (COMMA Identifier)* ;
