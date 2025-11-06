@@ -6,17 +6,18 @@ lexical NL = [\r]?[\n]+;
 
 // ---------- identificadores y literales ----------
 lexical Identifier = [a-z] [a-zA-Z0-9\-]* ;
-keyword KW = "cond" | "do" | "data" | "elseif" | "end" | "for" | "from" | "then" | "function" | "else" | "if" | "in" | "iterator" | "sequence" | "struct" | "to" | "tuple" | "type" | "with" | "yielding" ;
+keyword KW =
+  "cond" | "do" | "data" | "elseif" | "end" | "for" | "from" | "then"
+| "function" | "else" | "if" | "in" | "iterator" | "sequence" | "struct"
+| "to" | "tuple" | "type" | "with" | "yielding"
+| "and" | "or"                           
+;
 lexical Number  = [0-9]+ ("." [0-9]+)?;
-syntax Boolean
-  = "true"
-  | "false"
-  ;
+syntax Boolean = "true" | "false";
 lexical Char   = "\'" [a-z] "\'";
-lexical String = "\"" ![\"]* "\""; //Este no me convence; revisar
+lexical String = "\"" ![\"]* "\"";
 
 // ---------- Símbolos ----------
-
 lexical STAR    = "*";
 lexical SLASH   = "/";
 lexical MINUS   = "-";
@@ -29,13 +30,13 @@ lexical GT      = '\>';
 lexical LE      = '\<=';
 lexical GE      = '\>=';
 lexical NE      = '\<\>';
-lexical EQ      = "==";  
+lexical EQ      = "==";
 
 lexical ARROW   = '-\>';
 lexical COLON   = ":";
 lexical DOLLAR  = "$";
-lexical LP = "(";
-lexical RP = ")";
+lexical LP      = "(";
+lexical RP      = ")";
 lexical LB      = "[";
 lexical RB      = "]";
 lexical COMMA   = ",";
@@ -46,60 +47,82 @@ start syntax Program = program:Module+;
 // ---------- Módulos ----------
 syntax Module
   = funMod: FunctionModule
-  | dataMod: DataModule;
+  | dataMod: DataModule
+  ;
 
 syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList "end" ;
 
-
 // ---------- Funciones ----------
 syntax FunctionModule
-  = function: "function" Identifier LP [Parameters]? RP
-    NL* "do" NL* Expressions NL* "end" NL*;
-
-  
-
-// ---------- Bloques/Expresiones ----------
-syntax Parameters = Identifier (COMMA Identifier)* ;
-syntax Expressions = Expression (NL Expression)* ;
-syntax Primary
-  = Identifier             // variable
-  | FunctionCall           // f$(...)
-  | Value                  // literales
-  | LP Expression RP       // ( ... )
+  = function: "function" Identifier LP Parameters? RP   // <--- quita los corchetes [ ] y usa ? normal
+    NL* "do" NL* Statements NL* "end" NL*
   ;
 
-syntax Expression
-  = left Expression PLUS  right Expression
-  > left Expression MINUS right Expression
-  > left Expression STAR  right Expression
-  > left Expression SLASH right Expression
-  > Assignment
-  > ControlExpression
+// ---------- Bloques / Expresiones ----------
+syntax Parameters = Identifier (COMMA Identifier)* ;
+syntax Statements = Statement (NL Statement)* ;
+
+syntax Primary
+  = Identifier
+  | FunctionCall
+  | Value
+  | LP Expression RP
+  ;
+
+syntax Mul
+  = left Mul STAR  right Mul
+  > left Mul SLASH right Mul
   > Primary
   ;
-  
 
-syntax ControlExpression = IfExpression | CondExpression |ForExpression ;
+syntax Add
+  = left Add PLUS  right Add
+  > left Add MINUS right Add
+  > Mul
+  ;
+
+syntax Expression = Add;         
+
+syntax Statement
+  = Assignment
+  | ControlStatement
+  | Expression
+  ;
+
+// --- Control ---
+syntax ControlStatement = IfExpression | CondExpression | ForExpression ;
+
 syntax IfExpression
-  = "if" Condition "then" NL* Expressions ( "elseif" Condition "then" NL* Expressions )* "else" NL* Expressions "end";
-syntax CondExpression 
-  = "cond" Identifier "do" NL*(Condition ARROW Expressions)+ NL* "end" ;
-syntax ForExpression
-  = "for" Identifier "from" Range "do" NL* Expressions "end" ;
-syntax Range = Expression "to" Expression ;
+  = "if" Condition "then" NL* Statements
+    ( "elseif" Condition "then" NL* Statements )*
+    "else" NL* Statements
+    "end"
+  ;
 
-syntax Assignment = VariableList "=" Expression ;
-syntax VariableList = Identifier (COMMA Identifier)* ;
+syntax CondExpression
+  = "cond" Identifier "do" NL* (Condition ARROW Statements)+ NL* "end" ;
+
+syntax ForExpression
+  = "for" Identifier "from" Range "do" NL* Statements "end" ;
+
+syntax Range = Expression "to" Expression ;     
+
+// --- Assignment y listas ---
+syntax Assignment    = VariableList "=" Expression ;
+syntax VariableList  = Identifier (COMMA Identifier)* ;
 syntax IdentifierList = Identifier (COMMA Identifier)* ;
 
-syntax DataDefinition 
-  = "struct" LP FieldList RP 
-  | "sequence" LP Elements RP 
-  | "tuple" LP Expression COMMA Expression RP;
+// --- DataDefinition  ---
+syntax DataDefinition
+  = "struct"   LP FieldList RP
+  | "sequence" LP Elements RP
+  | "tuple"    LP Expression COMMA Expression RP   
+  ;
 
 syntax FieldList = Identifier (COMMA Identifier)* ;
-syntax Elements = Expression (COMMA Expression)* ;
+syntax Elements  = Expression (COMMA Expression)* ; 
 
+// --- Literales / valores primarios ---
 syntax Value
   = Number
   | Boolean
@@ -107,10 +130,10 @@ syntax Value
   | String
   ;
 
+// --- Llamadas ---
 syntax FunctionCall = Identifier DOLLAR LP Arguments RP ;
-syntax Arguments = Expression (COMMA Expression)* ;
+syntax Arguments    = Expression (COMMA Expression)* ; 
 
-syntax Condition = Expression Operator Expression ;
-syntax Operator = LT | GT | LE | GE | NE | EQ | "and" | "or";
-
-
+// --- Condiciones ---
+syntax Condition = Expression Operator Expression ;     
+syntax Operator  = LT | GT | LE | GE | NE | EQ | "and" | "or";

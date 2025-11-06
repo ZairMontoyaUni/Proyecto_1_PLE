@@ -12,5 +12,5 @@ elseif x == 3 then
 else
   x = 1
 end
-x
-end
+
+main()
