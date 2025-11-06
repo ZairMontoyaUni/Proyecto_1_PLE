@@ -11,7 +11,7 @@ public void main(list[str] args=[]) {
     //Por favor no olvidar cambiar la ruta para probar los diferentes archivos.
       //? "C:/Users/User/Documents/UNI/LYM/proyecto-1-ple/proyecto-1-ple/instance/prueba.alu"
       //? "C:/Users/nelso/Documents/proyecto-1-ple/instance/prueba.alu"
-      ? "C:/Users/LENOVO/Documents/GitHub/proyecto-1-ple/instance/prueba2.alu"
+      ? "C:/Users/LENOVO/Documents/GitHub/proyecto-1-ple/instance/prueba3.alu"
       : args[0];
 
   if (args == [])
