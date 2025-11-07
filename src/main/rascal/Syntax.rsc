@@ -66,7 +66,6 @@ syntax Primary
   = Identifier
   | FunctionCall
   | Value
-  | LP Expression RP
   ;
 
 syntax Mul
@@ -81,11 +80,12 @@ syntax Add
   > Mul
   ;
 
-syntax Expression = Add;         
+syntax Expression
+   = left VariableList "=" right Expression
+   > Add;         
 
 syntax Statement
-  = Assignment
-  | ControlStatement
+  = ControlStatement
   | Expression
   ;
 
@@ -108,7 +108,6 @@ syntax ForExpression
 syntax Range = Expression "to" Expression ;     
 
 // --- Assignment y listas ---
-syntax Assignment    = VariableList "=" Expression ;
 syntax VariableList  = Identifier (COMMA Identifier)* ;
 syntax IdentifierList = Identifier (COMMA Identifier)* ;
 

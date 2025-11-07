@@ -14,7 +14,7 @@ Language aluLang = language(pcfg, "ALU", "alu", "Plugin", "contribs");
 
 set[LanguageService] contribs() = {
   parser(start[Program] (str program, loc src) {
-    return parse(#Program, program, src);
+    return parse(#start[Program], program, src);
   })
 };
 
