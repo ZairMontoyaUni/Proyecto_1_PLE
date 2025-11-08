@@ -50,7 +50,7 @@ syntax Module
   | dataMod: DataModule
   ;
 
-syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList "end" ;
+syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList NL* "end" ;
 
 // ---------- Funciones ----------
 syntax FunctionModule
@@ -63,7 +63,7 @@ syntax Parameters = Identifier (COMMA Identifier)* ;
 syntax Statements = Statement (NL Statement)* ;
 
 syntax Primary
-  = Identifier
+  = Identifier 
   | FunctionCall
   | Value
   ;
@@ -81,8 +81,8 @@ syntax Add
   ;
 
 syntax Expression
-   = left VariableList "=" right Expression
-   > Add;         
+   =  VariableList "=" Expression
+   | Add;         
 
 syntax Statement
   = ControlStatement
@@ -94,8 +94,8 @@ syntax ControlStatement = IfExpression | CondExpression | ForExpression ;
 
 syntax IfExpression
   = "if" Condition "then" NL* Statements
-    ( "elseif" Condition "then" NL* Statements )*
-    "else" NL* Statements
+    NL* ( "elseif" Condition "then" NL* Statements )*
+    "else" NL* Statements NL*
     "end"
   ;
 
@@ -103,9 +103,9 @@ syntax CondExpression
   = "cond" Identifier "do" NL* (Condition ARROW Statements)+ NL* "end" ;
 
 syntax ForExpression
-  = "for" Identifier "from" Range "do" NL* Statements "end" ;
+  = "for" Identifier "from" Range "do" NL* Statements NL* "end" ;
 
-syntax Range = Expression "to" Expression ;     
+syntax Range = Expression "to" Expression NL*;     
 
 // --- Assignment y listas ---
 syntax VariableList  = Identifier (COMMA Identifier)* ;

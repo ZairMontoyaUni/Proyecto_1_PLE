@@ -19,7 +19,7 @@ public void main(list[str] args=[]) {
 
   str src = readFile(|file://<path>|);
   println(src); 
-  Program p = toAST(src, |file://<path>|);
+  Program p = Implode::toAST(src, |file://<path>|);
   runProgram(p);
 }
 
