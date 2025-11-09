@@ -10,8 +10,8 @@ public void main(list[str] args=[]) {
     (args == [])
     //Por favor no olvidar cambiar la ruta para probar los diferentes archivos.
       //? "C:/Users/User/Documents/UNI/LYM/proyecto-1-ple/proyecto-1-ple/instance/prueba.alu"
-      //? "C:/Users/nelso/Documents/proyecto-1-ple/instance/prueba.alu"
-      ? "C:/Users/LENOVO/Documents/GitHub/proyecto-1-ple/instance/prueba3.alu"
+      //? "C:/Users/LENOVO/Documents/GitHub/proyecto-1-ple/instance/prueba3.alu"
+      ? "C:/Users/nelso/Documents/proyecto-1-ple/instance/prueba.alu"
       : args[0];
 
   if (args == [])

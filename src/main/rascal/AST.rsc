@@ -1,6 +1,16 @@
 module AST
 
-// Programa y módulos
+// ==================== TIPOS (NUEVO) ====================
+data Type
+  = intType()
+  | boolType()
+  | charType()
+  | stringType()
+  | userType(str name)
+  | unknownType()
+  ;
+
+// Programa y módulos (SIN CAMBIOS)
 data Program = program(list[Module] modules);
 
 data Module
@@ -8,56 +18,56 @@ data Module
   | dataMod(DataDecl d)
   ;
 
-// Declaraciones
+// Declaraciones (SIN CAMBIOS - mantener compatibilidad)
 data FunctionDecl = function(
-  str name,                  // Identifier
-  list[str] params,          // Parameters?
-  list[Statement] body       // Statements
+  str name,
+  list[str] params,
+  list[Statement] body
 );
 
 data DataDecl = dataDecl(
-  str name,                  // Identifier
-  list[str] fields           // IdentifierList
+  str name,
+  list[str] fields
 );
 
-// Sentencias
+// Sentencias (SIN CAMBIOS)
 data Statement
-  = assign(list[str] lhs, Expression rhs)                                   // VariableList "=" Expression
+  = assign(list[str] lhs, Expression rhs)
   | ifStmt(
-      Condition cond,                                                       // if <cond>
-      list[Statement] thenBody,                                             // then
-      list[tuple[Condition, list[Statement]]] elifs,                        // (elseif cond then body)*
-      list[Statement] elseBody                                              // else
+      Condition cond,
+      list[Statement] thenBody,
+      list[tuple[Condition, list[Statement]]] elifs,
+      list[Statement] elseBody
     )
   | condStmt(
-      str selector,                                                         // "cond" Identifier ...
-      list[tuple[Condition, list[Statement]]] branches                      // (Condition -> Statements)+
+      str selector,
+      list[tuple[Condition, list[Statement]]] branches
     )
   | forStmt(
-      str var,                                                              // for Identifier
-      Range range,                                                          // from Range
-      list[Statement] body                                                  // do Statements end
+      str var,
+      Range range,
+      list[Statement] body
     )
-  | exprStmt(Expression e)                                                  // expresión como sentencia
+  | exprStmt(Expression e)
   ;
 
-// Rango y condición
-data Range      = range(Expression lo, Expression hi);                      // Expression "to" Expression
+// Rango y condición (SIN CAMBIOS)
+data Range = range(Expression lo, Expression hi);
 
-data Operator   = lt() | gt() | le() | ge() | ne() | eq() | and() | or();
+data Operator = lt() | gt() | le() | ge() | ne() | eq() | and() | or();
 
-data Condition  = condition(Expression left, Operator op, Expression right); // Expression OP Expression
+data Condition = condition(Expression left, Operator op, Expression right);
 
-// Expresiones
+// Expresiones (SIN CAMBIOS)
 data Expression
-  = add (Expression left, Expression right)
-  | sub (Expression left, Expression right)
-  | mul (Expression left, Expression right)
-  | div (Expression left, Expression right)
-  | call(str callee, list[Expression] args)                                  // Identifier $ ( Arguments )
-  | var (str name)                                                           // Identifier como Primary
-  | number(str lexeme)                                                       // Number (guarda como string; puedes parsear luego)
-  | boolean  (bool b)                                                           // Boolean
-  | char  (str c)                                                            // Char
-  | string(str s)                                                            // String
+  = add(Expression left, Expression right)
+  | sub(Expression left, Expression right)
+  | mul(Expression left, Expression right)
+  | div(Expression left, Expression right)
+  | call(str callee, list[Expression] args)
+  | var(str name)
+  | number(str lexeme)
+  | boolean(bool b)
+  | char(str c)
+  | string(str s)
   ;

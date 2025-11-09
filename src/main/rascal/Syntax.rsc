@@ -10,7 +10,8 @@ keyword KW =
   "cond" | "do" | "data" | "elseif" | "end" | "for" | "from" | "then"
 | "function" | "else" | "if" | "in" | "iterator" | "sequence" | "struct"
 | "to" | "tuple" | "type" | "with" | "yielding"
-| "and" | "or"                           
+| "and" | "or"
+| "Int" | "Bool" | "Char" | "String"  // NUEVO: tipos
 ;
 lexical Number  = [0-9]+ ("." [0-9]+)?;
 syntax Boolean = "true" | "false";
@@ -41,6 +42,18 @@ lexical LB      = "[";
 lexical RB      = "]";
 lexical COMMA   = ",";
 
+// ==================== NUEVO: Tipos ====================
+syntax TypeName
+  = "Int"
+  | "Bool"
+  | "Char"
+  | "String"
+  | Identifier
+  ;
+
+syntax TypedIdentifier = Identifier (COLON TypeName)?;
+syntax TypedIdentifierList = TypedIdentifier (COMMA TypedIdentifier)*;
+
 // ---------- Raíz ----------
 start syntax Program = program:Module+;
 
@@ -50,11 +63,15 @@ syntax Module
   | dataMod: DataModule
   ;
 
-syntax DataModule = dataDecl: "data" Identifier "with" NL* IdentifierList NL* "end" ;
+// MODIFICADO: Ahora acepta TypedIdentifierList o IdentifierList
+syntax DataModule 
+  = dataDecl: "data" Identifier "with" NL* TypedIdentifierList NL* "end"
+  | dataDecl: "data" Identifier "with" NL* IdentifierList NL* "end"  // compatibilidad
+  ;
 
 // ---------- Funciones ----------
 syntax FunctionModule
-  = function: "function" Identifier LP Parameters? RP   // <--- quita los corchetes [ ] y usa ? normal
+  = function: "function" Identifier LP Parameters? RP
     NL* "do" NL* Statements NL* "end" NL*
   ;
 
