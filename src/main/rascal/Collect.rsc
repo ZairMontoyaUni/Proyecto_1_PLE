@@ -9,16 +9,13 @@ import analysis::typepal::AType;     // tyInt(), tyBool(), tyChar(), tyString(),
 // Roles
 data IdRole = variableId() | functionId() | dataTypeId();
 
-// helper: nombre (string) para define()
+
 private str t2s(Tree t) = "<t>";
 
-/* =========================
- * ROOT BRIDGE
- * ========================= */
 void collect(current: start[Program] `<Program p>`, Collector c) = collect(p, c);
 
 /* =========================
- * PROGRAM & MODULES
+ * Programa & Modulo
  * ========================= */
 void collect(current: (Program) `program: <Module ms>`, Collector c) {
   c.enterScope(current);
@@ -30,7 +27,7 @@ void collect(current: (Module) `funMod: <FunctionModule f>`, Collector c) = coll
 void collect(current: (Module) `dataMod: <DataModule d>`,   Collector c) = collect(d, c);
 
 /* =========================
- * DATA DECLARATIONS
+ * Declaraciones 
  * ========================= */
 void collect(current: (DataModule)
   `dataDecl: "data" <Identifier id> "with" NL* <TypedIdentifierList til> NL* "end"`, Collector c) {
@@ -51,7 +48,7 @@ void collect(current: (DataModule)
 }
 
 /* =========================
- * FUNCTIONS
+ * Funciones
  * ========================= */
 void collect(current: (FunctionModule)
   `function: "function" <Identifier id> "(" ")" NL* "do" NL* <Statements ss> NL* "end" NL*`, Collector c) {
@@ -76,7 +73,7 @@ void collect(current: (FunctionModule)
 }
 
 /* =========================
- * STATEMENTS / BLOCKS
+ * Statments / Bloques
  * ========================= */
 void collect(current: (Statements) `<Statement ss>`, Collector c) {
   for (Statement s <- ss) collect(s, c);
@@ -92,7 +89,7 @@ void collect(current: (Statement) `<VariableList vs> "=" <Expression e>`, Collec
   }
 }
 
-// if / elseif* / else — robusto (evita patrones frágiles)
+// if / elseif* / else 
 void collect(current: (IfExpression) _, Collector c) {
   visit (current) {
     case (Condition)  cond: collect(cond, c);
@@ -100,7 +97,7 @@ void collect(current: (IfExpression) _, Collector c) {
   }
 }
 
-// for v from lo to hi do ... end
+
 void collect(current: (ForExpression)
   `for <Identifier v> "from" <Range r> "do" NL* <Statements b> NL* "end"`, Collector c) {
   c.enterScope(current);
@@ -110,17 +107,17 @@ void collect(current: (ForExpression)
   c.leaveScope(current);
 }
 
-// cond sel do (g -> s)+ end
+
 void collect(current: (CondExpression) _, Collector c) {
   visit(current) {
-    case (Identifier) sel: c.use(sel, {variableId(), functionId()}); // pasa Tree, no str
+    case (Identifier) sel: c.use(sel, {variableId(), functionId()}); 
     case (Condition)  g  : collect(g, c);
     case (Statements) s  : collect(s, c);
   }
 }
 
 /* =========================
- * RANGE / CONDITION
+ * Rango / Condición
  * ========================= */
 void collect(current: (Range) `<Expression lo> "to" <Expression hi> NL*`, Collector c) {
   collect(lo, c);
@@ -136,7 +133,7 @@ void collect(current: (Condition) `<Expression a> <Operator _> <Expression b>`, 
 }
 
 /* =========================
- * EXPRESSIONS
+ * Expresiones
  * ========================= */
 void collect(current: (Expression) `<Expression l> PLUS  <Expression r>`, Collector c) {
   collect(l, c); collect(r, c);
