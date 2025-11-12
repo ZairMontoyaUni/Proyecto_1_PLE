@@ -1,25 +1,32 @@
 module TypeChecker
 
-import AST;
+import Syntax;
+import ParseTree;
 import Collect;
-import Implode;
+import analysis::typepal::TypePal;
 import IO;
 
-public void checkFile(loc file) {
-  println("Iniciando análisis…");
-  str src = readFile(file);
+TypePalConfig cfg() = tconfig(
+  verbose = false
+);
 
-  Program p = program([]);
-
+public void typeCheckFile(loc file) {
   try {
-    p = toAST(src, file);           // Usa tu Parser/Implode ya existentes
+    str  src = readFile(file);
+    Tree pt  = parse(#Program, src, file);     // devuelve start[Program]
+
+    TModel tm = collectAndSolve(pt, config = cfg());
+
+    if (size(tm.messages) == 0) {
+      println(" No type errors.");
+    } else {
+      println(" Type errors:");
+      for (msg <- tm.messages) {
+        println("  <msg>");
+      }
+    }
   }
   catch e: {
-    println("Error parseando archivo: <e>");
-    return;
+    println("Error: <e>");
   }
-
-  println("AST generado.");
-  collectProgram(p);                // <- usamos nuestro recolector básico
-  println("Análisis completado.");
 }
