@@ -4,6 +4,10 @@ import Syntax;
 import ParseTree;
 import AST;
 import Parser;
+
+// ==================== NUEVO: yield ====================
+private str yield(Tree t) = "<t>";
+
 // ====================
 // API principal
 // ====================
@@ -37,16 +41,34 @@ public AST::Module implodeModule(Tree t) {
 }
 
 // ====================
-// DataModule
+// DataModule (sin cambios en el AST, solo manejo de sintaxis)
 // ====================
 
 public AST::DataDecl implodeData(Tree t) {
   switch (t) {
+    // Patrón con TypedIdentifierList
+    case (DataModule)
+         `dataDecl: "data" <Identifier id> "with" NL* <TypedIdentifierList til> NL* "end"`:
+      return dataDecl(yield(id), implodeTypedIdentifierList(til));
+    
+    // Patrón original con IdentifierList
     case (DataModule)
          `dataDecl: "data" <Identifier id> "with" NL* <IdentifierList il> NL* "end"`:
       return dataDecl(yield(id), implodeIdentifierList(il));
   }
   throw "Unexpected DataModule tree in implodeData";
+}
+
+// NUEVA: extraer identificadores de TypedIdentifierList
+public list[str] implodeTypedIdentifierList(Tree t) {
+  list[str] ids = [];
+  visit(t) {
+    case (TypedIdentifier) `<Identifier id>`:
+      ids += [yield(id)];
+    case (TypedIdentifier) `<Identifier id> : <TypeName _>`:
+      ids += [yield(id)];
+  }
+  return ids;
 }
 
 public list[str] implodeIdentifierList(Tree t) {
@@ -114,7 +136,6 @@ public AST::Statement implodeStatement(Tree t) {
   throw "Unexpected Statement tree in implodeStatement";
 }
 
-
 public list[str] implodeVariableList(Tree t) {
   switch (t) {
     case (VariableList) `<Identifier ids>`:
@@ -149,7 +170,6 @@ public AST::Statement implodeControl(Tree t) {
   throw "Unexpected ControlStatement tree in implodeControl";
 }
 
-
 // ====================
 // Range, Condition, Operator
 // ====================
@@ -173,7 +193,6 @@ public AST::Condition implodeCondition(Tree t) {
   }
   throw "Unexpected Condition tree in implodeCondition";
 }
-
 
 public AST::Operator implodeOperator(Tree t) {
   switch (t) {
